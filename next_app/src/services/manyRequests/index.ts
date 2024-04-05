@@ -5,24 +5,15 @@
  * hit. So this service will represent the manyRequests that are sent by our sync function
  */
 
-function dynamicUrlGenerator(length: number): string {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charactersLength = characters.length;
-  let result = "";
-
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-
-  return result;
-}
+import { delay, dynamicUrlGenerator } from "@/utilities/serviceUtilities";
 
 async function sendRequest() {
   try {
     const randomString = dynamicUrlGenerator(1000);
     const url = "http://localhost:3001/" + randomString;
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      cache: "no-store",
+    });
     if (response.ok) {
       const data = await response.json();
       console.log(data);
@@ -35,14 +26,12 @@ async function sendRequest() {
   }
 }
 
-async function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-let toSendManyRequest = true;
 export async function start() {
-  while (toSendManyRequest) {
+  let i = 0;
+  console.log("Starting manyRequests background service");
+  while (i < 10000) {
     await sendRequest();
     await delay(5);
+    i++;
   }
 }

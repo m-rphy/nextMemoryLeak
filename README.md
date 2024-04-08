@@ -7,18 +7,16 @@ This repo reproduces a memory leak within a production application in a minimal 
 A toy Express server and a very simple Next.js application.
 
 - The Express server has a singe catch-all route with simulated network latency.
-- The Next.js application has two single services:
+- The Next.js application has two services:
   Each service is the same except one implements the service with node's native fetch
-  while the other uses a custom fetch that is implemented with http module.
+  while the other uses a custom fetch that is implemented with nodes http module.
 
-- The Next.js application has two routes:
-  Both begin the same general process however one uses node's native fetch to send the requests,
-  while the other uses a very simple implementation of node's http module to send requests.
+- The Next.js application has two routes for each service:
 
-1. start-fetch
+1. `/start-fetch`
    - This route uses node's native fetch.
      \*This is the route that has memory issues that are discussed below.
-2. start-custom-fetch
+2. `/start-custom-fetch`
    - This route uses the custom http fetch.
 
 ## Recreating the issue
@@ -32,6 +30,9 @@ Since we are simulating network traffic, this process involves running two serve
 3.  Using any browser go to either `http://localhost:3000/start-fetch` or `http://localhost:3000/start-custom-fetch` to begin the requests.
 
 4.  Then open chrome inspect (`chrome://inspect`) or use any other debugging tools.
+
+
+# Background Information / What's been done
 
 ## Memory profile issues
 
